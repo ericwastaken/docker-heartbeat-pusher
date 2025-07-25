@@ -47,9 +47,6 @@ if [ -z "$LATEST_TIMESTAMP" ]; then
   exit 1
 fi
 
-# Get the current time in UTC
-CURRENT_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-
 # Convert timestamps to seconds since epoch for comparison
 LATEST_SECONDS=$(date -u -d "$LATEST_TIMESTAMP" +%s 2>/dev/null)
 if [ $? -ne 0 ]; then
