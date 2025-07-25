@@ -56,7 +56,7 @@ To run the container using Docker Compose, create a `compose.yml` file in your p
 ```yaml
 services:
   heartbeat-pusher:
-    image: ericwastaken/heartbeat-pusher:latest
+    image: ericwastakenondocker/heartbeat-pusher:latest
     container_name: heartbeat-pusher
     restart: unless-stopped
     environment:
