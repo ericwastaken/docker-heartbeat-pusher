@@ -10,4 +10,12 @@ RUN apt-get update -qq && \
 COPY heartbeat.sh /usr/local/bin/heartbeat.sh
 RUN chmod +x /usr/local/bin/heartbeat.sh
 
+# Copy the healthcheck script into the image
+COPY healthcheck.sh /usr/local/bin/healthcheck.sh
+RUN chmod +x /usr/local/bin/healthcheck.sh
+
+# Configure healthcheck
+HEALTHCHECK --interval=35s --timeout=5s --start-period=10s --retries=3 \
+  CMD ["/usr/local/bin/healthcheck.sh"]
+
 ENTRYPOINT ["/usr/local/bin/heartbeat.sh"]

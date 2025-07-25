@@ -32,6 +32,23 @@ docker run -d \
   ericwastaken/heartbeat-pusher:latest
 ```
 
+### With Custom Healthcheck Parameters
+
+The container includes a built-in healthcheck, but you can customize its parameters:
+
+```sh
+docker run -d \
+  --name heartbeat-pusher \
+  --env-file .env \
+  --restart unless-stopped \
+  --health-cmd="/usr/local/bin/healthcheck.sh" \
+  --health-interval=35s \
+  --health-timeout=5s \
+  --health-retries=3 \
+  --health-start-period=10s \
+  ericwastaken/heartbeat-pusher:latest
+```
+
 ## Running with Docker Compose
 
 To run the container using Docker Compose, create a `compose.yml` file in your project directory (assuming you have a .env file with the needed environment variables):
@@ -46,6 +63,12 @@ services:
       - HEARTBEAT_URL
       - INTERVAL_SECONDS
       - LOGFILE
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 35s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 ```
 
 Ensure you have your `.env` file in the same directory as `compose.yml`.
@@ -87,6 +110,25 @@ The container runs a simple bash script that:
 1. Sends an HTTP request to the configured URL at the specified interval
 2. Logs the result of each attempt
 3. Continues running indefinitely, restarting automatically if the container is restarted
+
+### Healthcheck
+
+The container includes a built-in healthcheck that verifies the heartbeat service is functioning properly:
+
+1. It checks if the log file has recent entries within the expected timeframe (INTERVAL_SECONDS + 5 seconds)
+2. Reports the container as healthy if recent entries exist, unhealthy otherwise
+3. Runs automatically every 35 seconds (by default)
+
+You can check the health status of the container using:
+
+```sh
+docker inspect --format='{{.State.Health.Status}}' heartbeat-pusher
+```
+
+This will return one of the following statuses:
+- `starting`: Initial state during the start period
+- `healthy`: The container is functioning properly
+- `unhealthy`: The container is not functioning properly
 
 ## Usage Notes
 

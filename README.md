@@ -53,6 +53,34 @@ The container runs a simple bash script that:
 2. Logs the result of each attempt
 3. Continues running indefinitely, restarting automatically if the container is restarted
 
+### Healthcheck
+
+The container includes a built-in healthcheck that verifies the heartbeat service is functioning properly. The healthcheck:
+
+1. Checks if the log file has recent entries within the expected timeframe (INTERVAL_SECONDS + 5 seconds)
+2. Reports the container as healthy if recent entries exist, unhealthy otherwise
+3. Runs automatically every 35 seconds (by default)
+
+You can check the health status of the container using:
+
+```bash
+docker inspect --format='{{.State.Health.Status}}' docker-heartbeat-pusher
+```
+
+To run the container with custom healthcheck parameters:
+
+```bash
+docker run -d \
+  --name docker-heartbeat-pusher \
+  --env-file .env \
+  --health-cmd="/usr/local/bin/healthcheck.sh" \
+  --health-interval=35s \
+  --health-timeout=5s \
+  --health-retries=3 \
+  --health-start-period=10s \
+  ericwastaken/heartbeat-pusher:latest
+```
+
 ## Logs
 
 You can view the logs of the heartbeat attempts by:
