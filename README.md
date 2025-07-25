@@ -10,6 +10,10 @@ This project is best used in situations where a system needs to send out a heart
 - Notifying a central monitoring system that a distributed service is still running
 - Creating a "dead man's switch" that triggers alerts when a system stops sending heartbeats
 
+## Available on Docker Hub
+
+This container is available on Docker Hub at [ericwastakenondocker/heartbeat-pusher](https://hub.docker.com/r/ericwastakenondocker/heartbeat-pusher).
+
 ## Setup Instructions
 
 ### 1. Clone the repository
