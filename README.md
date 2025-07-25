@@ -64,14 +64,14 @@ The container includes a built-in healthcheck that verifies the heartbeat servic
 You can check the health status of the container using:
 
 ```bash
-docker inspect --format='{{.State.Health.Status}}' docker-heartbeat-pusher
+docker inspect --format='{{.State.Health.Status}}' heartbeat-pusher
 ```
 
 To run the container with custom healthcheck parameters:
 
 ```bash
 docker run -d \
-  --name docker-heartbeat-pusher \
+  --name heartbeat-pusher \
   --env-file .env \
   --health-cmd="/usr/local/bin/healthcheck.sh" \
   --health-interval=35s \
@@ -86,7 +86,7 @@ docker run -d \
 You can view the logs of the heartbeat attempts by:
 
 ```bash
-docker logs docker-heartbeat-pusher
+docker logs heartbeat-pusher
 ```
 
 Or by examining the log file specified in your `.env` configuration.

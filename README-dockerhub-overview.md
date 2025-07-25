@@ -98,7 +98,7 @@ docker-compose down
 To view the logs:
 
 ```sh
-docker logs docker-heartbeat-pusher
+docker logs heartbeat-pusher
 ```
 
 Or by examining the log file specified in your `.env` configuration.

@@ -1,7 +1,7 @@
 services:
-  docker-heartbeat-pusher:
+  heartbeat-pusher:
     build: .
-    container_name: docker-heartbeat-pusher
+    container_name: heartbeat-pusher
     restart: unless-stopped
     environment:
       - HEARTBEAT_URL
