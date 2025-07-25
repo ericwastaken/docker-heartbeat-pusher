@@ -1,0 +1,15 @@
+services:
+  heartbeat-pusher:
+    image: ericwastaken/heartbeat-pusher:latest
+    container_name: heartbeat-pusher
+    restart: unless-stopped
+    environment:
+      - HEARTBEAT_URL
+      - INTERVAL_SECONDS
+      - LOGFILE
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 35s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

@@ -73,6 +73,8 @@ services:
 
 Ensure you have your `.env` file in the same directory as `compose.yml`.
 
+In the project repository, you can find an example compose file called `compose-using-dockerhub.yml` that demonstrates using the remote image from DockerHub.
+
 To start the service with Docker Compose, run:
 
 ```sh
