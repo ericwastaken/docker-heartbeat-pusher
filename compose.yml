@@ -1,0 +1,9 @@
+services:
+  docker-heartbeat-pusher:
+    build: .
+    container_name: docker-heartbeat-pusher
+    restart: unless-stopped
+    environment:
+      - HEARTBEAT_URL
+      - INTERVAL_SECONDS
+      - LOGFILE
