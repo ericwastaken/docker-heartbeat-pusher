@@ -1,6 +1,9 @@
 # Docker Heartbeat Pusher
 
-A Docker container that persistently sends HTTP requests (heartbeats) to a remote URL at regular intervals. This is useful for monitoring system uptime, as it allows another monitoring system to detect when the source system is down if heartbeats stop arriving.
+A Docker container that persistently sends HTTP requests (heartbeats) to a remote URL at regular intervals. This is 
+useful for monitoring system uptime, as it allows another monitoring system to detect when the source system is down if
+heartbeats stop arriving. For a concrete example of a receiver, see the "Example Heartbeat Webhook Receiver" section 
+below that uses Uptime Kuma, however any other system that accepts HTTP requests can be used.
 
 ## Purpose
 
@@ -9,6 +12,34 @@ This project is best used in situations where a system needs to send out a heart
 - Sending regular pings to uptime monitoring services
 - Notifying a central monitoring system that a distributed service is still running
 - Creating a "dead man's switch" that triggers alerts when a system stops sending heartbeats
+
+## Example Heartbeat Webhook Receiver
+
+Uptime Kuma is a popular, self-hosted monitoring tool (similar to UptimeRobot) that can act as a webhook heartbeat 
+receiver. It provides a unique Push URL for each monitor; your systems send periodic HTTP requests to that URL. If 
+Uptime Kuma does not receive a heartbeat within the configured interval, it marks the monitor as down and can send 
+alerts via email, Slack, Discord, webhooks, and many other channels.
+
+Learn more: https://github.com/louislam/uptime-kuma
+
+How to use Uptime Kuma as the heartbeat receiver for this container:
+
+1. Deploy Uptime Kuma (Docker or other) and access its web UI.
+2. Create a new monitor:
+   - Type: Push
+   - Name: e.g., "Heartbeat from Server A"
+   - Heartbeat Interval: choose how often you expect a heartbeat (e.g., 60 seconds)
+   - Expiry Notification: optional, controls when Kuma triggers an alert after missing heartbeats
+   - Save, then copy the generated Push URL
+3. Configure this container to send to that Push URL:
+   - In your `.env` file set `HEARTBEAT_URL` to the Push URL from Uptime Kuma
+   - Set `INTERVAL_SECONDS` slightly less than the Heartbeat Interval you configured in Uptime Kuma (e.g., if Kuma is 60s, use 50–55s here) so the heartbeat always arrives in time
+   - Optionally set `LOGFILE` to a path for persistent logs
+4. Start this container (see Setup Instructions below). The service will send an HTTP request to Uptime Kuma on each interval. If Uptime Kuma does not receive a heartbeat within the expected timeframe, it will mark the monitor as down and trigger your configured notifications.
+
+Notes:
+- Ensure network connectivity from this container to your Uptime Kuma instance (open firewall/ports as needed).
+- Uptime Kuma accepts GET or POST to the Push URL; no body is required for a simple "up" heartbeat.
 
 ## Available on Docker Hub
 
